@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nano_omni"
+version = "0.1.0"
+requires-python = ">=3.9"
+dependencies = [
+    "torch==2.6.0",
+    "torchvision==0.21.0",
+    "transformers>=4.40",
+    "numpy",
+    "pillow",
+    "pyyaml",
+    "soundfile",
+    "accelerate",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "pytest-mock"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["nano_omni*"]

@@ -1,0 +1,38 @@
+model_path: "Qwen/Qwen3-Omni-30B-A3B-Thinking"
+model_family: "qwen3_omni"
+
+stages:
+  - id: 0
+    name: thinker
+    type: ar
+    kv_cache_max_requests: 32
+    max_tokens_per_step: 2048
+    max_batch_size: 32
+    chunk_size: 512
+    sampling:
+      temperature: 0.4
+      top_p: 0.9
+      top_k: -1
+      max_tokens: 2048
+      stop_token_ids: []
+      repetition_penalty: 1.05
+
+  - id: 1
+    name: talker
+    type: ar
+    kv_cache_max_requests: 32
+    max_tokens_per_step: 2048
+    max_batch_size: 32
+    chunk_size: 512
+    sampling:
+      temperature: 0.9
+      top_p: 1.0
+      top_k: 50
+      max_tokens: 4096
+      stop_token_ids: [2150]
+      repetition_penalty: 1.05
+
+  - id: 2
+    name: code2wav
+    type: codec
+    max_batch_size: 32

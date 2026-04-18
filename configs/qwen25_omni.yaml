@@ -1,0 +1,40 @@
+model_path: "./models/Qwen2.5-Omni-7B"
+model_family: "qwen25_omni"
+
+stages:
+  - id: 0
+    name: thinker
+    type: ar
+    kv_cache_max_requests: 32
+    max_tokens_per_step: 2048
+    max_batch_size: 32
+    chunk_size: 512
+    sampling:
+      temperature: 0.7
+      top_p: 0.9
+      top_k: -1
+      max_tokens: 2048
+      # <|im_end|> = 151645, <|endoftext|> = 151643
+      stop_token_ids: [151645, 151643]
+      repetition_penalty: 1.05
+
+  - id: 1
+    name: talker
+    type: ar
+    kv_cache_max_requests: 32
+    max_tokens_per_step: 2048
+    max_batch_size: 32
+    chunk_size: 512
+    sampling:
+      temperature: 0.9
+      top_p: 1.0
+      top_k: 50
+      max_tokens: 4096
+      # Qwen2.5-Omni talker codec_eos_token = 8294
+      stop_token_ids: [8294]
+      repetition_penalty: 1.05
+
+  - id: 2
+    name: code2wav
+    type: codec
+    max_batch_size: 32
