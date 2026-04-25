@@ -95,12 +95,14 @@ def test_pipeline_single_request():
     )
 
     req = OmniRequest(request_id="r1", text="hello")
-    results = pipeline.run(requests=[req])
+    results, metrics = pipeline.run(requests=[req])
 
     assert len(results) == 1
     out = results[0]
     assert out.request_id == "r1"
     assert out.audio is not None
+    assert metrics.total_s >= 0
+    assert len(metrics.stages) == 3
 
 
 def test_pipeline_converter_count_mismatch():
@@ -127,9 +129,10 @@ def test_pipeline_multiple_requests():
         ],
     )
     reqs = [OmniRequest(request_id=rid, text="hi") for rid in ["r1", "r2"]]
-    results = pipeline.run(requests=reqs)
+    results, metrics = pipeline.run(requests=reqs)
     assert len(results) == 2
     assert {r.request_id for r in results} == {"r1", "r2"}
+    assert metrics.total_s >= 0
 
 
 def test_pipeline_two_stages_no_audio():
@@ -141,8 +144,9 @@ def test_pipeline_two_stages_no_audio():
         converters=[lambda out: StageInput(request_id=out.request_id, token_ids=out.token_ids)],
     )
     req = OmniRequest(request_id="r1", text="hello")
-    results = pipeline.run(requests=[req])
+    results, metrics = pipeline.run(requests=[req])
     assert results[0].audio is None
+    assert len(metrics.stages) == 2
 
 
 def test_pipeline_stage0_without_model_raises():

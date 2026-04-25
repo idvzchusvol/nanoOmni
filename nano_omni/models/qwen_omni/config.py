@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import yaml
 
-from nano_omni.types import PipelineConfig, SamplingParams, StageConfig
+from nano_omni.types import ModelConfig, SamplingParams, StageConfig
 
 
-def load_pipeline_config(yaml_path: str) -> PipelineConfig:
+def load_model_config(yaml_path: str) -> ModelConfig:
     """Load PipelineConfig from a YAML file."""
     with open(yaml_path) as f:
         raw = yaml.safe_load(f)
@@ -31,7 +31,7 @@ def load_pipeline_config(yaml_path: str) -> PipelineConfig:
             sampling_params=sp,
         ))
 
-    return PipelineConfig(
+    return ModelConfig(
         model_path=raw["model_path"],
         model_family=raw.get("model_family", "qwen3_omni"),
         stages=stages,

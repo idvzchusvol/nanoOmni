@@ -13,7 +13,7 @@ import argparse
 import soundfile as sf
 
 from nano_omni.models import build_omni_pipeline
-from nano_omni.models.qwen_omni import load_pipeline_config
+from nano_omni.models.qwen_omni import load_model_config
 from nano_omni.types import OmniRequest
 
 
@@ -26,12 +26,12 @@ def main():
     args = parser.parse_args()
 
     print(f"[nanoOmni] Loading config: {args.config}")
-    cfg = load_pipeline_config(args.config)
+    cfg = load_model_config(args.config)
     pipeline = build_omni_pipeline(cfg, device=args.device)
 
     request = OmniRequest(request_id="demo", text=args.text)
     print(f"[nanoOmni] Running inference: {args.text}")
-    results = pipeline.run(requests=[request])
+    results, _metrics = pipeline.run(requests=[request])
 
     if not results:
         print("[nanoOmni] No output.")

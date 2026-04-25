@@ -69,8 +69,36 @@ class OmniOutput:
 
 
 @dataclass
+class StageMetrics:
+    """单个 Stage 的性能指标。"""
+    name: str
+    elapsed_s: float
+    num_tokens: int
+    ttft_s: Optional[float] = None
+
+    @property
+    def tokens_per_s(self) -> float:
+        if self.elapsed_s <= 0 or self.num_tokens <= 0:
+            return 0.0
+        return self.num_tokens / self.elapsed_s
+
+
+@dataclass
+class PipelineMetrics:
+    """Pipeline 单次运行的性能指标。"""
+    stages: list[StageMetrics]
+    total_s: float
+    audio_duration_s: Optional[float] = None
+
+    @property
+    def rtf(self) -> Optional[float]:
+        if self.audio_duration_s is None or self.audio_duration_s <= 0:
+            return None
+        return self.total_s / self.audio_duration_s
+
+
+@dataclass
 class StageConfig:
-    """单个 Stage 的运行时配置。"""
     name: str
     stage_type: str                             # "ar" | "codec"
     max_batch_size: int = 32
@@ -81,8 +109,7 @@ class StageConfig:
 
 
 @dataclass
-class PipelineConfig:
-    """整个 Pipeline 的配置，包含所有 Stage 配置。"""
+class ModelConfig:
     model_path: str
     model_family: str = "qwen3_omni"
     stages: list[StageConfig] = field(default_factory=list)

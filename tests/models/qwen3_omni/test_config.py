@@ -1,5 +1,5 @@
 import pytest
-from nano_omni.models.qwen_omni.config import load_pipeline_config
+from nano_omni.models.qwen_omni.config import load_model_config
 
 YAML_CONTENT = """
 model_path: /fake/path
@@ -27,14 +27,14 @@ stages:
 def test_load_pipeline_config(tmp_path):
     cfg_file = tmp_path / "test.yaml"
     cfg_file.write_text(YAML_CONTENT)
-    cfg = load_pipeline_config(str(cfg_file))
+    cfg = load_model_config(str(cfg_file))
     assert cfg.model_path == "/fake/path"
     assert len(cfg.stages) == 2
 
 def test_stage_config_fields(tmp_path):
     cfg_file = tmp_path / "test.yaml"
     cfg_file.write_text(YAML_CONTENT)
-    cfg = load_pipeline_config(str(cfg_file))
+    cfg = load_model_config(str(cfg_file))
     thinker_cfg = cfg.stages[0]
     assert thinker_cfg.name == "thinker"
     assert thinker_cfg.stage_type == "ar"
@@ -47,7 +47,7 @@ def test_stage_config_fields(tmp_path):
 def test_codec_stage_defaults(tmp_path):
     cfg_file = tmp_path / "test.yaml"
     cfg_file.write_text(YAML_CONTENT)
-    cfg = load_pipeline_config(str(cfg_file))
+    cfg = load_model_config(str(cfg_file))
     codec_cfg = cfg.stages[1]
     assert codec_cfg.stage_type == "codec"
     assert codec_cfg.max_batch_size == 4

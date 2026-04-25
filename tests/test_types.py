@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import pytest
 from nano_omni.types import (
-    SamplingParams, OmniRequest, StageInput, StageOutput, OmniOutput, StageConfig, PipelineConfig
+    SamplingParams, OmniRequest, StageInput, StageOutput, OmniOutput, StageConfig, ModelConfig
 )
 
 def test_sampling_params_defaults():
@@ -53,6 +53,6 @@ def test_stage_config_defaults():
     assert cfg.kv_cache_max_requests == 32
 
 def test_pipeline_config():
-    cfg = PipelineConfig(model_path="/fake/path")
+    cfg = ModelConfig(model_path="/fake/path")
     assert cfg.model_path == "/fake/path"
     assert cfg.stages == []

@@ -1,4 +1,6 @@
 .claude/
+.vscode/
+.codex
 __pycache__/
 *.pyc
 *.pyo
@@ -10,3 +12,6 @@ build/
 .venv/
 uv.lock
 /models/
+
+
+
